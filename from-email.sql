@@ -11,3 +11,8 @@ update dq_emails_from_email set normal = 'Fauci, Anthony (NIH/NIAID)'
    where levenshtein_less_equal('Fauci, Anthony (NIH/NIAID)', normal, 6) < 6;
 update dq_emails_from_email set normal = '(b)(6)'
    where levenshtein_less_equal('(b)(6)', normal, 3) < 3;
+---
+update emails e
+   set from_email = (select normal from dq_emails_from_email dq
+                        where dq.email_id = e.email_id);
+---
