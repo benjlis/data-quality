@@ -47,10 +47,16 @@ update dq_emails_sent set sent_ttz = try_cast_timestamp(wip)
       where sent_ttz is null;
 
 
-
 -- remove junk at end
 update dq_emails_sent
    set wip = regexp_replace(wip, ' (\+0000|AM|PM).*', ' \1')
    where sent_ttz is null;
 update dq_emails_sent set sent_ttz = try_cast_timestamp(wip)
          where sent_ttz is null;
+---
+update emails set sent = null;
+alter table emails
+  alter column sent type timestamptz using sent::timestamp with time zone;
+update emails e
+    set sent = (select sent_ttz from dq_emails_sent dq
+                    where dq.email_id = e.email_id);
