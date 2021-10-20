@@ -1,3 +1,4 @@
+drop table if exists dq_emails_from_email;
 create table dq_emails_from_email as
 select email_id, from_email, from_email normal from emails;
 -- remove [E] which appears is often misread
